@@ -1,0 +1,31 @@
+{
+  "name": "mobile-shop",
+  "version": "1.0.0",
+  "description": "MERN fullstack mobile-shop",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node backend/server",
+    "server": "nodemon backend/server",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hickey-bule-chips/mobile-shop.git"
+  },
+  "author": "Hickey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hickey-bule-chips/mobile-shop/issues"
+  },
+  "homepage": "https://github.com/Hickey-bule-chips/mobile-shop#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.2"
+  }
+}

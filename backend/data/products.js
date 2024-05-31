@@ -1,6 +1,5 @@
 const products = [
   {
-    _id: "1",
     name: "迷你一辑 I AM",
     image: "/images/I-AM.jpg",
     description:
@@ -13,7 +12,6 @@ const products = [
     numReviews: 100,
   },
   {
-    _id: "2",
     name: "单曲专辑 DUMDi DUMDi",
     image: "/images/DUMDi-DUMDi.jpg",
     description:
@@ -26,7 +24,6 @@ const products = [
     numReviews: 90,
   },
   {
-    _id: "3",
     name: "正规一辑 I NEVER DIE",
     image: "/images/I-NEVER-DIE.jpg",
     description:
@@ -39,7 +36,6 @@ const products = [
     numReviews: 37,
   },
   {
-    _id: "4",
     name: "迷你五辑 I LOVE",
     image: "/images/I-LOVE.jpg",
     description:
@@ -52,7 +48,6 @@ const products = [
     numReviews: 75,
   },
   {
-    _id: "5",
     name: "迷你六辑 I FEEL",
     image: "/images/I-FEEL.jpg",
     description:
@@ -65,7 +60,6 @@ const products = [
     numReviews: 110,
   },
   {
-    _id: "6",
     name: "英语迷你专辑 HEAT",
     image: "/images/HEAT.jpg",
     description:
@@ -78,7 +72,6 @@ const products = [
     numReviews: 2023,
   },
   {
-    _id: "7",
     name: "正规二辑 2(SECOND)",
     image: "/images/2(SECOND).jpg",
     description:
@@ -91,7 +84,6 @@ const products = [
     numReviews: 131,
   },
   {
-    _id: "8",
     name: "迷你一辑 MY（曺薇娟）",
     image: "/images/MY.jpg",
     description:
@@ -104,7 +96,6 @@ const products = [
     numReviews: 37,
   },
   {
-    _id: "9",
     name: "迷你一辑 Windy(田小娟）",
     image: "/images/Windy.jpg",
     description:
@@ -117,7 +108,6 @@ const products = [
     numReviews: 75,
   },
   {
-    _id: "10",
     name: "迷你一辑 Yuq1（宋雨琦）",
     image: "/images/Yuq1.jpg",
     description:

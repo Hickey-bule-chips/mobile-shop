@@ -74,7 +74,7 @@ const Rating = ({ value, text, color = "#FFD700" }) => {
 // };
 
 Rating.propTypes = {
-  value: propTypes.number.isRequired,
+  value: propTypes.number,
   text: propTypes.string.isRequired,
   color: propTypes.string,
 };

@@ -1,15 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import store from "./store";
 import "./bootstrap.min.css";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+// 创建根节点并指定容器元素
 const root = ReactDOM.createRoot(document.getElementById("root"));
+// 渲染组件到根节点，不需要再次指定容器元素
 root.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <App />
-  </React.StrictMode>
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

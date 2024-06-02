@@ -7,12 +7,19 @@ import generateToken from "../utils/generateToken.js";
 //@access pulic
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  // const nameExists=await User.findOne({name});
+  const nameExists = await User.findOne({ name });
   const userExists = await User.findOne({ email });
-  //用户已存在
+
+  //用户名已存在
+  if (nameExists) {
+    res.status(400);
+    throw new Error("用户名已注册");
+  }
+
+  //邮箱已存在
   if (userExists) {
     res.status(400);
-    throw new Error("用户已注册");
+    throw new Error("邮箱已注册");
   }
   //没有注册，就注册新用户
   const user = await User.create({ name, email, password });

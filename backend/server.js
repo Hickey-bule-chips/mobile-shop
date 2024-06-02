@@ -4,17 +4,21 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import colors from "colors";
 import connectDB from "./config/db.js";
 import productRoutes from "./routes/productRoutes.js";
+import userRoutes from "./routes/userRouters.js";
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
+app.use(express.json());
+
 app.get("/", (req, res) => {
   res.send("服务器已经运行...");
 });
 
 app.use("/api/products", productRoutes);
+app.use("/api/users", userRoutes);
 
 //404错误处理middlewa中间件
 app.use(notFound);

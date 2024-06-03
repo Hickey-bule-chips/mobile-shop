@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useMatch } from "react-router-dom";
 import {
   Form,
   Button,
@@ -10,53 +10,42 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { createOrder } from "../actions/orderActions";
+import { getOrderDetails } from "../actions/orderActions";
 import Message from "../compnents/Message";
-import CheckoutSteps from "../compnents/CheckoutSteps";
+import Loader from "../compnents/Loader";
 
-const PlaceorderScreen = () => {
-  const cart = useSelector((state) => state.cart);
+const OrderScreen = () => {
+  const {
+    params: { id },
+  } = useMatch("/order/:id");
+  const orderId = id;
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
+  const orderDetails = useSelector((state) => state.orderDetails);
+  const { order, loading, error } = orderDetails;
 
   //计算价格
-
-  const addDecimals = (num) => {
-    return (Math.round(num * 100) / 100).toFixed(2);
-  };
-  cart.itemsPrice = addDecimals(
-    cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
-  );
-  cart.shippingPrice = addDecimals(cart.itemsPrice > 1000 ? 0 : 20);
-  cart.totalPrice = addDecimals(
-    Number(cart.itemsPrice) + Number(cart.shippingPrice)
-  );
-
-  const orderCreate = useSelector((state) => state.orderCreate);
-  const { order, success, error } = orderCreate;
+  if (!loading) {
+    const addDecimals = (num) => {
+      return (Math.round(num * 100) / 100).toFixed(2);
+    };
+    order.itemsPrice = addDecimals(
+      order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+    );
+  }
 
   useEffect(() => {
-    if (success) {
-      navigate(`/order/${order._id}`);
-    }
+    if (!order || order._id !== orderId) dispatch(getOrderDetails(orderId));
     //eslint-disable-next-line
-  }, [navigate, success]);
-  //提交订单的函数
-  const placeorderHandler = () => {
-    dispatch(
-      createOrder({
-        orderItems: cart.cartItems,
-        shippingAddress: cart.shippingAddress,
-        paymentMethod: cart.paymentMethod,
-        itemsPrice: cart.itemsPrice,
-        shippingPrice: cart.shippingPrice,
-        totalPrice: cart.totalPrice,
-      })
-    );
-  };
-  return (
+  }, [order, orderId]);
+
+  return loading ? (
+    <Loader />
+  ) : error ? (
+    <Message variant="danger">{error}</Message>
+  ) : (
     <>
-      <CheckoutSteps step1 step2 step3 step4 />
+      <h1>订单号：{order._id}</h1>
       <Row>
         <Col md={8}>
           <ListGroup variant="flush">
@@ -64,22 +53,47 @@ const PlaceorderScreen = () => {
               <h2>收货地址</h2>
               <p>
                 <strong>收件人地址：</strong>
-                {cart.shippingAddress.province}-{cart.shippingAddress.city}-
-                {cart.shippingAddress.address}-{cart.shippingAddress.postCode}
               </p>
+              <p>
+                <strong>用户名：</strong>
+                {order.user.name}
+              </p>
+              <p>
+                {" "}
+                <strong>邮箱：</strong>
+                <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
+              </p>
+              <p>
+                {order.shippingAddress.province}-{order.shippingAddress.city}-
+                {order.shippingAddress.address}-{order.shippingAddress.postCode}
+              </p>
+              {order.isDelivered ? (
+                <Message variant="success">
+                  发货时间：{order.DeliveredAt}
+                </Message>
+              ) : (
+                <Message variant="danger">未发货</Message>
+              )}
             </ListGroup.Item>
             <ListGroup.Item>
               <h2>支付方式</h2>
-              <strong>支付方法：</strong>
-              {cart.paymentMethod}
+              <p>
+                <strong>支付方法：</strong>
+                {order.paymentMethod}
+              </p>
+              {order.isPaid ? (
+                <Message variant="success">支付时间：{order.PaidAt}</Message>
+              ) : (
+                <Message variant="danger">待支付</Message>
+              )}
             </ListGroup.Item>
             <ListGroup.Item>
               <h2>商品订单：</h2>
-              {cart.cartItems.length === 0 ? (
+              {order.orderItems.length === 0 ? (
                 <Message>购物车为空</Message>
               ) : (
                 <ListGroup variant="flush">
-                  {cart.cartItems.map((item, index) => (
+                  {order.orderItems.map((item, index) => (
                     <ListGroup.Item key={index}>
                       <Row>
                         <Col md={1}>
@@ -116,33 +130,20 @@ const PlaceorderScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>商品总价</Col>
-                  <Col>{cart.itemsPrice}</Col>
+                  <Col>{order.itemsPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>运费</Col>
-                  <Col>{cart.shippingPrice}</Col>
+                  <Col>{order.shippingPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>订单总价</Col>
-                  <Col>{cart.totalPrice}</Col>
+                  <Col>{order.totalPrice}</Col>
                 </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                {error && <Message variant="danger">{error}</Message>}
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Button
-                  type="button"
-                  className="btn-block"
-                  onClick={placeorderHandler}
-                  disabled={cart.cartItems === 0}
-                >
-                  提交订单
-                </Button>
               </ListGroup.Item>
             </ListGroup>
           </Card>
@@ -152,4 +153,4 @@ const PlaceorderScreen = () => {
   );
 };
 
-export default PlaceorderScreen;
+export default OrderScreen;

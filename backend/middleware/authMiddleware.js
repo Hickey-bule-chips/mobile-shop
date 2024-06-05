@@ -26,4 +26,15 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { protect };
+//管理员验证中间件
+const admin = (req, res, next) => {
+  //请求中是否是用户以及是否是管理员用户
+  if (req.user && req.user.isAdmin) {
+    next();
+  } else {
+    res.status(401);
+    throw new Error("不是被授权的管理员");
+  }
+};
+
+export { protect, admin };

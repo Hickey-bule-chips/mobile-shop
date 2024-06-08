@@ -22,4 +22,18 @@ const getProductById = asyncHandler(async (req, res) => {
   }
 });
 
-export { getProducts, getProductById };
+//@desc 删除单个产品
+//@route DELETE/api/products/:id
+//@access private（管理员)
+const deleteProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (product) {
+    await Product.deleteOne({ _id: product });
+    res.json({ message: "商品删除成功" });
+  } else {
+    res.status(404);
+    throw new Error("查询不到这个商品");
+  }
+});
+
+export { getProducts, getProductById, deleteProduct };

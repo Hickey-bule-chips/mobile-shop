@@ -5,7 +5,12 @@ import { Table, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../compnents/Message";
 import Loader from "../compnents/Loader";
-import { listProducts, deleteProduct } from "../actions/productActions";
+import {
+  listProducts,
+  deleteProduct,
+  createProduct,
+} from "../actions/productActions";
+import { PRODUCT_CREATE_RESET } from "../constant/productConstants";
 
 const ProductListScreen = () => {
   const dispatch = useDispatch();
@@ -21,13 +26,32 @@ const ProductListScreen = () => {
     success: sussceeDelete,
   } = productDelete;
 
+  const productCreate = useSelector((state) => state.productCreate);
+  const {
+    loading: loadingCreate,
+    error: errorCreate,
+    success: successCreate,
+    product: createdProduct,
+  } = productCreate;
+
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-      dispatch(listProducts());
-    } else {
+    dispatch({ type: PRODUCT_CREATE_RESET });
+    if (!userInfo.isAdmin) {
       navigate("/login");
     }
-  }, [dispatch, navigate, userInfo, sussceeDelete]);
+    if (successCreate) {
+      navigate(`/admin/product/${createdProduct._id}/edit`);
+    } else {
+      dispatch(listProducts());
+    }
+  }, [
+    dispatch,
+    navigate,
+    userInfo,
+    sussceeDelete,
+    successCreate,
+    createdProduct,
+  ]);
 
   //删除商品函数
   const deleteHandler = (id) => {
@@ -39,7 +63,7 @@ const ProductListScreen = () => {
   //创建产品函数
   const createProductHandler = () => {
     //创建商品
-    console.log("添加商品");
+    dispatch(createProduct());
   };
   return (
     <>
@@ -53,6 +77,8 @@ const ProductListScreen = () => {
           </Button>
         </Col>
       </Row>
+      {loadingCreate && <Loader />}
+      {errorCreate && <Message variant="danger">{errorCreate}</Message>}
       {loadingDelete && <Loader />}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
       {loading ? (

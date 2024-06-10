@@ -35,7 +35,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
 
 //@desc    依据订单ID获取订单
 //@route   GET/api/orders/:id
-//@access  私密
+//@access  私密(仅限管理员)
 const getOrderById = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id).populate(
     "user",
@@ -48,4 +48,12 @@ const getOrderById = asyncHandler(async (req, res) => {
     throw new Error("查询不到订单");
   }
 });
-export { addOrderItems, getOrderById };
+
+//@desc    获取所有订单
+//@route   GET/api/orders
+//@access  私密(仅限管理员)
+const getOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({}).populate("user", "id name");
+  res.json(orders);
+});
+export { addOrderItems, getOrderById, getOrders };

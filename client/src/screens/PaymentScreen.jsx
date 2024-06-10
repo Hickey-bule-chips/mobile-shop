@@ -41,10 +41,10 @@ const PaymentScreen = () => {
             ></Form.Check>
             <Form.Check
               type="radio"
-              label="支付宝"
-              id="支付宝"
+              label="PayPal"
+              id="PayPal"
               name="paymentMethod"
-              value="支付宝"
+              value="PayPal"
               onChange={(e) => setPaymentMethod(e.target.value)}
             ></Form.Check>
           </Col>

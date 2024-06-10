@@ -9,6 +9,7 @@ import {
   Card,
   ListGroup,
 } from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrderDetails } from "../actions/orderActions";
 import Message from "../compnents/Message";
@@ -20,6 +21,9 @@ const OrderScreen = () => {
   } = useMatch("/order/:id");
   const orderId = id;
   const dispatch = useDispatch();
+
+  //弹出框的状态
+  const [show, setShow] = useState(false);
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
@@ -38,6 +42,10 @@ const OrderScreen = () => {
     if (!order || order._id !== orderId) dispatch(getOrderDetails(orderId));
     //eslint-disable-next-line
   }, [order, orderId]);
+
+  //创建开启和关闭弹出框的函数
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   return loading ? (
     <Loader />
@@ -144,6 +152,41 @@ const OrderScreen = () => {
                   <Col>订单总价</Col>
                   <Col>{order.totalPrice}</Col>
                 </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Button
+                  type="button"
+                  className="btn-block"
+                  onClick={handleShow}
+                  disabled={order.orderItems === 0}
+                >
+                  去支付
+                </Button>
+                <Modal show={show} onHide={handleClose}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>订单号：{order._id}</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <p>支付金额：¥{order.totalPrice}</p>
+                    <p>支付方式：{order.paymentMethod}</p>
+                    <Row>
+                      <Col md={6} style={{ textAlign: "center" }}>
+                        <Image src="/images/wechat.jpg" />
+                        <p>
+                          <strong>请扫码</strong>
+                        </p>
+                      </Col>
+                      <Col>
+                        <Image src="/images/saoyisao.jpg" />
+                      </Col>
+                    </Row>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="primary" onClick={handleClose}>
+                      关闭
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
               </ListGroup.Item>
             </ListGroup>
           </Card>

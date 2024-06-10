@@ -61,16 +61,8 @@ const createProduct = asyncHandler(async (req, res) => {
 //@route POST/api/products/:id
 //@access private（管理员)
 const updateProduct = asyncHandler(async (req, res) => {
-  const {
-    name,
-    price,
-    description,
-    image,
-    brand,
-    category,
-    countInStock,
-    rating,
-  } = req.body;
+  const { name, price, description, image, brand, category, countInStock } =
+    req.body;
 
   const product = await Product.findById(req.params.id);
   if (product) {
@@ -81,7 +73,6 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.brand = brand;
     product.category = category;
     product.countInStock = countInStock;
-    product.rating = rating;
     const updatedProduct = await product.save();
     res.status(201).json(updatedProduct);
   } else {
